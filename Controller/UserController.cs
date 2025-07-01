@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TeamTaskManager.DTOs;
 using TeamTaskManager.Entities;
 using TeamTaskManager.Extension;
 using TeamTaskManager.Interfaces;
@@ -70,6 +71,14 @@ namespace TeamTaskManager.Controller
             return Ok(new { imageUrl });
         }
 
+        [HttpGet("getUserById")]
+        [Authorize]
+        public async Task<ActionResult<UserDto>> GetUserById()
+        {
+            var userId = User.GetUserId();
+            var user=await _unitOfWork.UserRepository.GetUserByIdAsync(userId);
+            return Ok(_mapper.Map<UserDto>(user));
+        }
 
     }
 }
