@@ -42,5 +42,47 @@ namespace TeamTaskManager.Controller
         }
 
 
+        
+        [HttpPut("update/{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateTeam(int id, [FromBody] TeamDto dto)
+        {
+            var userId = User.GetUserId(); // استفاده از ClaimsPrincipalExtensions
+
+            var existingTeam = await _unitOfWork.TeamRepository.GetTeamByIdAsync(id);
+            if (existingTeam == null)
+                return NotFound("Team not found");
+
+            if (existingTeam.OwnerId != userId)
+                return Forbid("You are not the owner of this team");
+
+            // 
+            existingTeam.Name = dto.Name;
+            existingTeam.Description = dto.Description;
+
+            _unitOfWork.TeamRepository.UpdateTeam(existingTeam);
+            await _unitOfWork.CompleteAsync();
+
+            return Ok(_mapper.Map<TeamDto>(existingTeam));
+        }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteTeam(int id)
+        {
+            var userId = User.GetUserId(); 
+            var team = await _unitOfWork.TeamRepository.GetTeamByIdAsync(id);
+
+            if (team == null)
+                return NotFound("Team not found");
+
+            if (team.OwnerId != userId)
+                return Forbid("Only the owner can delete this team");
+
+            _unitOfWork.TeamRepository.DeleteTeam(team);
+            await _unitOfWork.CompleteAsync();
+
+            return NoContent();
+        }
+
     }
 }

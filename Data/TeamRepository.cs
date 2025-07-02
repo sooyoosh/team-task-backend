@@ -17,6 +17,7 @@ namespace TeamTaskManager.Data
             return await _context.Teams
                 .Include(t => t.Owner)
                 .Include(t => t.Members)
+                .ThenInclude(t => t.User)
                 .Include(t => t.Projects)
                 .ToListAsync();
         }
