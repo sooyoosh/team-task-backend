@@ -19,6 +19,7 @@ namespace TeamTaskManager.Data
                 .Include(t => t.Members)
                 .ThenInclude(t => t.User)
                 .Include(t => t.Projects)
+                .ThenInclude(t => t.Tasks)
                 .ToListAsync();
         }
 

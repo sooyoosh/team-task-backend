@@ -17,6 +17,7 @@ namespace TeamTaskManager.Data
         {
             return await _context.Users
                 .Include(u => u.OwnedTeams)
+                .Include(u=>u.RefreshTokens)
                 .Include(u => u.Teams)
                     .ThenInclude(tm => tm.Team)
                 .FirstOrDefaultAsync(u => u.Id == id);

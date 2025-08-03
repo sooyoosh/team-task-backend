@@ -17,6 +17,7 @@ namespace TeamTaskManager.Entities
         public byte[] PasswordSalt { get; set; } = [];
 
         public string? ProfileImageUrl { get; set; }
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
         public ICollection<Team> OwnedTeams { get; set; } = new List<Team>();
 
         public ICollection<TeamMember> Teams { get; set; } = new List<TeamMember>();

@@ -6,6 +6,7 @@ namespace TeamTaskManager.DTOs
     {
         public string FullName { get; set; }
         public required string Token { get; set; }
+        public string RefreshToken { get; set; } = string.Empty;
         public string Email { get; set; }
         public string? ProfileImageUrl { get; set; }
 

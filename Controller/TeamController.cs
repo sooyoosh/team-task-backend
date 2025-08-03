@@ -84,5 +84,18 @@ namespace TeamTaskManager.Controller
             return NoContent();
         }
 
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTeamDetails(int id)
+        {
+            var team = await _unitOfWork.TeamRepository.GetTeamByIdAsync(id);
+
+            if (team == null)
+                return NotFound("Team not found");
+
+            var teamDto = _mapper.Map<TeamDetailsDto>(team);
+            return Ok(teamDto);
+        }
     }
 }
