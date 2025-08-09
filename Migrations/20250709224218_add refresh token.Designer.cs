@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeamTaskManager.Data;
 
@@ -11,9 +12,11 @@ using TeamTaskManager.Data;
 namespace TeamTaskManager.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250709224218_add refresh token")]
+    partial class addrefreshtoken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,40 +140,6 @@ namespace TeamTaskManager.Migrations
                     b.ToTable("Teams");
                 });
 
-            modelBuilder.Entity("TeamTaskManager.Entities.TeamInvitation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("InvitedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("InvitedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InvitedUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InvitedByUserId");
-
-                    b.HasIndex("InvitedUserId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("TeamInvitation");
-                });
-
             modelBuilder.Entity("TeamTaskManager.Entities.TeamMember", b =>
                 {
                     b.Property<int>("UserId")
@@ -269,33 +238,6 @@ namespace TeamTaskManager.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("TeamTaskManager.Entities.TeamInvitation", b =>
-                {
-                    b.HasOne("TeamTaskManager.Entities.User", "InvitedByUser")
-                        .WithMany()
-                        .HasForeignKey("InvitedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TeamTaskManager.Entities.User", "InvitedUser")
-                        .WithMany()
-                        .HasForeignKey("InvitedUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TeamTaskManager.Entities.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("InvitedByUser");
-
-                    b.Navigation("InvitedUser");
-
-                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("TeamTaskManager.Entities.TeamMember", b =>

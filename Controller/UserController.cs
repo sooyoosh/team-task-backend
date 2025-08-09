@@ -80,5 +80,15 @@ namespace TeamTaskManager.Controller
             return Ok(_mapper.Map<UserDto>(user));
         }
 
+
+        [HttpGet("getAllUser")]
+        [Authorize]
+        public async Task<IActionResult> GetAllUser()
+        {
+
+            var users = await _unitOfWork.UserRepository.GetAllUsers(); 
+            return Ok(_mapper.Map<List<UserDto>>(users));
+        }
+
     }
 }

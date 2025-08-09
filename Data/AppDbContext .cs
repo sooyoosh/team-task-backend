@@ -13,6 +13,7 @@ namespace TeamTaskManager.Data
         public DbSet<TeamMember> TeamMembers { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<TaskItem> TaskItems { get; set; }
+        public DbSet<TeamInvitation> TeamInvitation { get; set; }
 
 
         //Fluent Api
@@ -40,7 +41,25 @@ namespace TeamTaskManager.Data
                 .WithMany(t => t.Members)
                 .HasForeignKey(tm => tm.TeamId)
                 .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TeamInvitation>()
+    .HasOne(inv => inv.InvitedUser)
+    .WithMany() 
+    .HasForeignKey(inv => inv.InvitedUserId)
+    .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TeamInvitation>()
+                .HasOne(inv => inv.InvitedByUser)
+                .WithMany() 
+                .HasForeignKey(inv => inv.InvitedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TeamInvitation>()
+                .HasOne(inv => inv.Team)
+                .WithMany() 
+                .HasForeignKey(inv => inv.TeamId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
+
 
     }
 }

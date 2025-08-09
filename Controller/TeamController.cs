@@ -7,6 +7,7 @@ using TeamTaskManager.DTOs;
 using TeamTaskManager.Entities;
 using TeamTaskManager.Extension;
 using TeamTaskManager.Interfaces;
+using TeamTaskManager.Services;
 
 namespace TeamTaskManager.Controller
 {
@@ -16,10 +17,12 @@ namespace TeamTaskManager.Controller
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public TeamController(IMapper mapper, IUnitOfWork unitOfWork)
+        private readonly TeamService _teamService;
+        public TeamController(IMapper mapper, IUnitOfWork unitOfWork, TeamService teamService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _teamService = teamService;
         }
 
 
@@ -42,7 +45,7 @@ namespace TeamTaskManager.Controller
         }
 
 
-        
+
         [HttpPut("update/{id}")]
         [Authorize]
         public async Task<IActionResult> UpdateTeam(int id, [FromBody] TeamDto dto)
@@ -67,9 +70,10 @@ namespace TeamTaskManager.Controller
         }
 
         [HttpDelete("delete/{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteTeam(int id)
         {
-            var userId = User.GetUserId(); 
+            var userId = User.GetUserId();
             var team = await _unitOfWork.TeamRepository.GetTeamByIdAsync(id);
 
             if (team == null)
@@ -87,6 +91,7 @@ namespace TeamTaskManager.Controller
 
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetTeamDetails(int id)
         {
             var team = await _unitOfWork.TeamRepository.GetTeamByIdAsync(id);
@@ -97,5 +102,25 @@ namespace TeamTaskManager.Controller
             var teamDto = _mapper.Map<TeamDetailsDto>(team);
             return Ok(teamDto);
         }
+        [HttpGet("inviteUser/{teamId}/{invitedUserId}")]
+        [Authorize]
+        public async Task<IActionResult> InviteUser([FromRoute] int teamId,int invitedUserId)
+        {
+            var currentUserId=User.GetUserId();
+            var result = await _teamService.InviteUserToTeamAsync(teamId, invitedUserId, currentUserId);
+            if (result) return Ok(result);
+            else return BadRequest("خطا");
+
+        }
+        [HttpGet("invitations/pending")]
+        [Authorize]
+        public async Task<IActionResult> GetPendingInvitationsForUser()
+        {
+            var userId=User.GetUserId();
+            var invites=await _unitOfWork.TeamRepository.GetPendingInvitationsForUserAsync(userId);
+            var invitesDto = _mapper.Map<List<TeamInvitationDto>>(invites);
+            return Ok(invitesDto);
+        }
+
     }
 }

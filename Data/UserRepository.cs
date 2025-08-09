@@ -37,6 +37,10 @@ namespace TeamTaskManager.Data
                     .ThenInclude(tm => tm.Team)
                 .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
         }
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
         public async Task<bool> UserExists(string email)
         {
             return await _context.Users.AnyAsync(u => u.Email == email);

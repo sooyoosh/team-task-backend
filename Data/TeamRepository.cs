@@ -51,5 +51,26 @@ namespace TeamTaskManager.Data
         {
             return await _context.Teams.AnyAsync(t => t.Id == id);
         }
+        public async Task<TeamInvitation?> GetPendingInvitationAsync(int teamId ,int invitedUserId)
+        {
+            return await _context.TeamInvitation
+                .FirstOrDefaultAsync(i =>
+                    i.TeamId == teamId &&
+                    i.InvitedUserId == invitedUserId &&
+                    i.Status == InvitationStatus.Pending);
+        }
+        public async Task AddInvitationAsync(TeamInvitation invitation)
+        {
+             await _context.TeamInvitation.AddAsync(invitation);
+        }
+        public async Task<List<TeamInvitation>> GetPendingInvitationsForUserAsync(int userId)
+        {
+            return await _context.TeamInvitation
+                .Include(inv=>inv.Team)
+                .ThenInclude(inv=>inv.Owner)
+                .Include(inv=>inv.InvitedByUser)
+                .Where(inv=>inv.InvitedUserId==userId)
+                .ToListAsync();
+        }
     }
 }

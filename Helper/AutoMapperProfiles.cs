@@ -29,7 +29,15 @@ namespace TeamTaskManager.Helper
 
 
          CreateMap<Project, ProjectDto>();
+
          CreateMap<TaskItem, TaskItemDto>();
+            CreateMap<TeamInvitation, TeamInvitationDto>()
+            .ForMember(dest => dest.InvitationId, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.TeamName, opt => opt.MapFrom(src => src.Team.Name))
+            .ForMember(dest => dest.InvitedBy, opt => opt.MapFrom(src => src.InvitedByUser.FullName))
+            .ForMember(dest => dest.InvitedAt, opt => opt.MapFrom(src => src.InvitedAt));
+
+
 
         }
     }

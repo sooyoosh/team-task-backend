@@ -10,5 +10,6 @@ namespace TeamTaskManager.Interfaces
         Task<bool> UserExists(string email);
         void Add(User user);
         Task UpdateProfileImageAsync(int userId, string imageUrl);
+        Task<List<User>> GetAllUsers();
     }
 }

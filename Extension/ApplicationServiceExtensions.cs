@@ -31,6 +31,7 @@ namespace TeamTaskManager.Extension
             services.AddScoped<ITokenService,TokenService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<TeamService>();
 
 
             return services;
